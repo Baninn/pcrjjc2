@@ -1,4 +1,25 @@
-# pcrjjc2
+# pcrjjc2魔改版
+
+新增了监控任意数量的玩家ID功能
+
+为避免混淆，在推送中添加被监控账号的昵称
+
+为了与原binds.json兼容，新增账号暂时只能通过手动修改文件的方式
+
+示例
+
+  ```
+         "QQ号": {//若不想被@，QQ号可设为任意数字
+            "id": "玩家ID",
+            "uid": "QQ号",
+            "gid": "群号",
+            "arena_on": true,
+            "grand_arena_on": true
+        }
+  ```
+
+修改后重启生效
+
 
 本插件是[pcrjjc](https://github.com/lulu666lulu/pcrjjc)重置版，不需要使用其他后端api，但是需要自行配置客户端  
 
