@@ -140,6 +140,7 @@ async def group_num(bot, ev):
                 group_id=gid,
                 message=f"本Bot目前正在为【{len(gl)}】个群服务"
                 )
+                break
             except Exception as e:
                 sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
 
@@ -185,9 +186,6 @@ async def on_arena_bind(bot, ev):
         save_binds()
 
     await bot.finish(ev, '竞技场绑定成功', at_sender=True)
-
-
-
 
 @sv.on_rex(r'^竞技场查询 ?(\d{13})?$')
 async def on_query_arena(bot, ev):
@@ -335,18 +333,18 @@ async def delete_arena_sub(bot,ev):
 async def send_arena_sub_status(bot,ev):
     global binds, lck
     uid = str(ev['user_id'])
-    
 
     
     if not uid in binds:
         await bot.send(ev,'您还未绑定竞技场', at_sender=True)
     else:
-    #昵称查询方法
+        #昵称查询方法
         #uid = str(ev['user_id'])
         id = binds[uid]['id']
         res = await query(id)
         #name = res['user_info']["user_name"]
-    #改   
+        #改
+        
         info = binds[uid]
         await bot.finish(ev,
     f'''
@@ -380,14 +378,14 @@ async def on_arena_schedule():
 
             last = cache[uid]
             cache[uid] = res
-            
-            #昵称查询
+
+            #为避免混淆，在推送中添加被监控账号的昵称
             id_temp = binds[uid]['id']
             res_temp = await query(id_temp)
             name = res_temp['user_info']["user_name"]
             sv.logger.info(f'查了一下：{name} JJC{last[0]} PJJC{last[1]}')
             #改
-            
+
             # 两次间隔排名变化且开启了相关订阅就记录到数据库
             if res[0] != last[0] and info['arena_on']:
                 JJCH._add(int(info["id"]), 1, last[0], res[0])
@@ -406,12 +404,10 @@ async def on_arena_schedule():
                             group_id = int(info['gid']),
                             message = f'[CQ:at,qq={info["uid"]}]昵称：{name}jjc：{last[0]}->{res[0]} ▼{res[0]-last[0]}'
                         )
-                        #为避免混淆，在推送中添加被监控账号的昵称
+                        break
                     except Exception as e:
                         gid = int(info['gid'])
                         sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
-                        #sv.logger.info(f'昵称：{name}jjc：{last[0]}->{res[0]} ▼{res[0]-last[0]}')
-
 
             if res[1] > last[1] and info['grand_arena_on']:
                 for sid in hoshino.get_self_ids():
@@ -421,6 +417,7 @@ async def on_arena_schedule():
                             group_id = int(info['gid']),
                             message = f'[CQ:at,qq={info["uid"]}]昵称：{name}pjjc：{last[1]}->{res[1]} ▼{res[1]-last[1]}'
                         )
+                        break
                     except Exception as e:
                         gid = int(info['gid'])
                         sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
@@ -433,6 +430,7 @@ async def on_arena_schedule():
                             group_id = int(info['gid']),
                             message = f'[CQ:at,qq={info["uid"]}]昵称：{name}jjc：{last[0]}->{res[0]} ▲{last[0]-res[0]}'
                         )
+                        break
                     except Exception as e:
                         gid = int(info['gid'])
                         sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
@@ -445,6 +443,7 @@ async def on_arena_schedule():
                             group_id = int(info['gid']),
                             message = f'[CQ:at,qq={info["uid"]}]昵称：{name}pjjc：{last[1]}->{res[1]} ▲{last[1]-res[1]}'
                         )
+                        break
                     except Exception as e:
                         gid = int(info['gid'])
                         sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
