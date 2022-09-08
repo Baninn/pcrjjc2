@@ -14,7 +14,8 @@
             "uid": "QQ号",
             "gid": "群号",
             "arena_on": true,
-            "grand_arena_on": true
+            "grand_arena_on": true,
+            "login": true //启用上线检测
         }
   ```
 
