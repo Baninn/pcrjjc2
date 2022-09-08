@@ -370,7 +370,7 @@ async def on_arena_schedule():
         try:
             sv.logger.info(f'querying {info["id"]} for {info["uid"]}')
             res = await query(info['id'])
-            res = (res['user_info']['arena_rank'], res['user_info']['grand_arena_rank'])
+            res = (res['user_info']['arena_rank'], res['user_info']['grand_arena_rank'],res['user_info']['last_login_time'])
 
             if uid not in cache:
                 cache[uid] = res
@@ -395,6 +395,22 @@ async def on_arena_schedule():
                 JJCH._add(int(info["id"]), 0, last[1], res[1])
                 JJCH._refresh(int(info["id"]), 0)
                 sv.logger.info(f"{info['id']}: PJJC {last[1]}->{res[1]}")
+
+            if res[2] != last[2] and info['login']:
+                for sid in hoshino.get_self_ids():
+                    try:
+                        await bot.send_group_msg(
+                            self_id = sid,
+                            group_id = int(info['gid']),
+                            message = f'昵称：{name} 上线了'
+                        )
+                        break
+                    except Exception as e:
+                        gid = int(info['gid'])
+                        sv.logger.info(f'bot账号{sid}不在群{gid}中，将忽略该消息')
+
+
+
 
             if res[0] > last[0] and info['arena_on']:
                 for sid in hoshino.get_self_ids():
